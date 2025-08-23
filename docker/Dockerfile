@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copy csproj files first to leverage Docker layer caching
@@ -25,7 +25,7 @@ WORKDIR "/src/src/DotNetTutorialGenerator.Console"
 RUN dotnet publish "DotNetTutorialGenerator.Console.csproj" -c Release -o /app/publish/console
 
 # Stage 3: Final image (API)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final-api
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final-api
 WORKDIR /app
 COPY --from=publish /app/publish/api .
 USER appuser
