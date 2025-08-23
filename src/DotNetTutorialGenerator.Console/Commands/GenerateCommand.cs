@@ -1,12 +1,9 @@
-using System.CommandLine;
-using System.CommandLine.NamingConventionBinder;
 using DotNetTutorialGenerator.Console.Options;
 using DotNetTutorialGenerator.Console.Utilities;
-using DotNetTutorialGenerator.Core.Interfaces;
 using DotNetTutorialGenerator.Core.Models;
 using DotNetTutorialGenerator.Infrastructure.FileSystem;
-using DotNetTutorialGenerator.Infrastructure.LLM;
 using DotNetTutorialGenerator.Infrastructure.Persistence;
+using System.CommandLine;
 
 namespace DotNetTutorialGenerator.Console.Commands
 {

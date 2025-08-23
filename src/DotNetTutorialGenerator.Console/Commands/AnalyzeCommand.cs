@@ -1,5 +1,4 @@
 using System.CommandLine;
-using System.CommandLine.NamingConventionBinder;
 using DotNetTutorialGenerator.Console.Options;
 using DotNetTutorialGenerator.Console.Utilities;
 using DotNetTutorialGenerator.Core.Models;

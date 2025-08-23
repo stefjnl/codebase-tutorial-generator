@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using DotNetTutorialGenerator.Core.Models;
-using Microsoft.CodeAnalysis;
 
 namespace DotNetTutorialGenerator.Core.Interfaces
 {
