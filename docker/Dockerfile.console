@@ -1,0 +1,38 @@
+# Use the official .NET 8 SDK image as the base image for building
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the solution file and restore dependencies
+COPY *.sln ./
+COPY src/DotNetTutorialGenerator.Core/*.csproj ./src/DotNetTutorialGenerator.Core/
+COPY src/DotNetTutorialGenerator.Infrastructure/*.csproj ./src/DotNetTutorialGenerator.Infrastructure/
+COPY src/DotNetTutorialGenerator.Console/*.csproj ./src/DotNetTutorialGenerator.Console/
+
+# Restore NuGet packages
+RUN dotnet restore
+
+# Copy the rest of the source code
+COPY src ./src
+
+# Build the application
+RUN dotnet publish src/DotNetTutorialGenerator.Console/DotNetTutorialGenerator.Console.csproj -c Release -o /app/publish
+
+# Use the official .NET 8 runtime image for the final stage
+FROM mcr.microsoft.com/dotnet/runtime:8.0 AS runtime
+
+# Create a non-root user
+RUN useradd -m -u 1000 appuser
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the published application from the build stage
+COPY --from=build --chown=appuser:appuser /app/publish .
+
+# Switch to the non-root user
+USER appuser
+
+# Set the entry point for the application
+ENTRYPOINT ["dotnet", "DotNetTutorialGenerator.Console.dll"]
