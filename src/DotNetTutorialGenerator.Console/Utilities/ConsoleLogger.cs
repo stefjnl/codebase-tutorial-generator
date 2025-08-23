@@ -1,8 +1,9 @@
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+using Serilog.Sinks.File;
 
-namespace DotNetTutorialGenerator.Console.Utilities
+namespace DotNetTutorialGenerator.Cli.Utilities
 {
     public class ConsoleLogger
     {

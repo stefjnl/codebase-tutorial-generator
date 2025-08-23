@@ -2,6 +2,7 @@ using DotNetTutorialGenerator.Core.Interfaces;
 using DotNetTutorialGenerator.Infrastructure.FileSystem;
 using DotNetTutorialGenerator.Infrastructure.GitHub;
 using DotNetTutorialGenerator.Infrastructure.LLM;
+using DotNetTutorialGenerator.Infrastructure.Persistence;
 using DotNetTutorialGenerator.Infrastructure.Roslyn;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +17,7 @@ namespace DotNetTutorialGenerator.Api.Configuration
             services.AddScoped<IRepositoryCrawler, LocalRepositoryCrawler>();
             services.AddScoped<IRoslynAnalyzer, RoslynAnalyzer>();
             services.AddScoped<ILLMService, OpenAIService>(); // Default to OpenAI
-            services.AddScoped<ITutorialGenerator, Persistence.TutorialFileWriter>();
+            services.AddScoped<ITutorialGenerator, TutorialFileWriter>();
 
             // Register HTTP client for GitHub API
             services.AddHttpClient<GitHubApiClient>();

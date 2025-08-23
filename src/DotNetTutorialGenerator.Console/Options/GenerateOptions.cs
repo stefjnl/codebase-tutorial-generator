@@ -1,7 +1,7 @@
 using System.CommandLine;
 using System.CommandLine.Binding;
 
-namespace DotNetTutorialGenerator.Console.Options
+namespace DotNetTutorialGenerator.Cli.Options
 {
     public class GenerateOptions
     {

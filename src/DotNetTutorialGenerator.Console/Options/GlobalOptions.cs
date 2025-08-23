@@ -1,6 +1,6 @@
 using System.CommandLine;
 
-namespace DotNetTutorialGenerator.Console.Options
+namespace DotNetTutorialGenerator.Cli.Options
 {
     public class GlobalOptions
     {

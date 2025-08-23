@@ -1,6 +1,7 @@
+using System;
 using System.Text;
 
-namespace DotNetTutorialGenerator.Console.Utilities
+namespace DotNetTutorialGenerator.Cli.Utilities
 {
     public class ProgressReporter
     {
@@ -56,9 +57,9 @@ namespace DotNetTutorialGenerator.Console.Utilities
 
                 if (_useSpinner)
                 {
-                    Console.SetCursorPosition(0, Console.CursorTop);
-                    Console.Write(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(0, Console.CursorTop);
+                    System.Console.SetCursorPosition(0, System.Console.CursorTop);
+                    System.Console.Write(new string(' ', System.Console.WindowWidth));
+                    System.Console.SetCursorPosition(0, System.Console.CursorTop);
                 }
 
                 _logger.LogInformation(finalMessage);
@@ -74,9 +75,9 @@ namespace DotNetTutorialGenerator.Console.Utilities
 
                 if (_useSpinner)
                 {
-                    Console.SetCursorPosition(0, Console.CursorTop);
-                    Console.Write(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(0, Console.CursorTop);
+                    System.Console.SetCursorPosition(0, System.Console.CursorTop);
+                    System.Console.Write(new string(' ', System.Console.WindowWidth));
+                    System.Console.SetCursorPosition(0, System.Console.CursorTop);
                 }
 
                 _logger.LogError(errorMessage);
@@ -101,9 +102,9 @@ namespace DotNetTutorialGenerator.Console.Utilities
                     }
 
                     // Clear the line and write the new progress
-                    Console.SetCursorPosition(0, Console.CursorTop);
-                    Console.Write(progressText.PadRight(Console.WindowWidth - 1));
-                    Console.SetCursorPosition(0, Console.CursorTop);
+                    System.Console.SetCursorPosition(0, System.Console.CursorTop);
+                    System.Console.Write(progressText.PadRight(System.Console.WindowWidth - 1));
+                    System.Console.SetCursorPosition(0, System.Console.CursorTop);
 
                     spinnerIndex = (spinnerIndex + 1) % spinner.Length;
                 }

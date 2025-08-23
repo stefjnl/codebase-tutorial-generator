@@ -1,10 +1,10 @@
 using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Parsing;
-using DotNetTutorialGenerator.Console.Commands;
-using DotNetTutorialGenerator.Console.Options;
+using DotNetTutorialGenerator.Cli.Commands;
+using DotNetTutorialGenerator.Cli.Options;
 
-namespace DotNetTutorialGenerator.Console
+namespace DotNetTutorialGenerator.Cli
 {
     class Program
     {
