@@ -1,10 +1,15 @@
 using DotNetTutorialGenerator.Core.Interfaces;
+using DotNetTutorialGenerator.Core.Services;
+using DotNetTutorialGenerator.Infrastructure.Caching;
 using DotNetTutorialGenerator.Infrastructure.FileSystem;
 using DotNetTutorialGenerator.Infrastructure.GitHub;
 using DotNetTutorialGenerator.Infrastructure.LLM;
+using DotNetTutorialGenerator.Infrastructure.Monitoring;
 using DotNetTutorialGenerator.Infrastructure.Persistence;
 using DotNetTutorialGenerator.Infrastructure.Roslyn;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using DotNetTutorialGenerator.Api.Configuration;
 
 namespace DotNetTutorialGenerator.Api.Configuration
 {
@@ -19,8 +24,17 @@ namespace DotNetTutorialGenerator.Api.Configuration
             services.AddScoped<ILLMService, OpenAIService>(); // Default to OpenAI
             services.AddScoped<ITutorialGenerator, TutorialFileWriter>();
 
+            // Register new services
+            services.AddScoped<ITutorialValidator, TutorialValidator>();
+            services.AddScoped<ILLMResponseCache, LLMResponseCache>();
+            services.AddScoped<MetricsCollector>();
+            services.AddScoped<RetryPolicy>();
+
             // Register HTTP client for GitHub API
             services.AddHttpClient<GitHubApiClient>();
+
+            // Register options validators
+            services.AddSingleton<IValidateOptions<LLMSettings>, LLMSettingsValidator>();
 
             return services;
         }

@@ -6,11 +6,16 @@ A tool that analyzes .NET codebases and generates beginner-friendly tutorials ex
 
 - **Multi-source Analysis**: Analyze code from GitHub repositories or local directories
 - **.NET-Specific Understanding**: Deep understanding of .NET patterns and practices
-- **LLM Integration**: Uses OpenAI GPT-4 or Claude for semantic analysis
+- **LLM Integration**: Uses OpenAI GPT-4, Claude, or LM Studio for semantic analysis
 - **Clean Architecture**: Well-structured codebase following clean architecture principles
 - **Multiple Interfaces**: Both RESTful API and CLI interfaces
 - **Docker Support**: Easy deployment with Docker containers
 - **Comprehensive Testing**: Unit and integration tests included
+- **Advanced .NET Analysis**: NuGet package analysis, configuration pattern detection, middleware pipeline mapping
+- **Caching Layer**: LLM response caching for improved performance
+- **Progress Tracking**: Real-time progress reporting for long-running operations
+- **Enhanced Error Handling**: Custom exceptions with context and retry policies
+- **Metrics Collection**: Performance and usage monitoring
 
 ## Architecture
 
