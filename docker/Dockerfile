@@ -39,7 +39,7 @@ EXPOSE 80
 ENTRYPOINT ["dotnet", "DotNetTutorialGenerator.Api.dll"]
 
 # Stage 4: Final image (Console)
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS final-console
+FROM mcr.microsoft.com/dotnet/runtime:9.0 AS final-console
 WORKDIR /app
 COPY --from=publish /app/publish/console .
 USER appuser
