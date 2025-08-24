@@ -5,9 +5,11 @@
 @using DotNetTutorialGenerator.Blazor.Components
 @using DotNetTutorialGenerator.Blazor.Services
 @using DotNetTutorialGenerator.Core.Interfaces
+@using DotNetTutorialGenerator.Api.DTOs
 @inject IAppState AppState
 @inject ITutorialGenerationService TutorialGenerationService
 @inject NavigationManager NavigationManager
+@inject HttpClient Http
 
 <PageTitle>Generate Tutorial</PageTitle>
 
@@ -151,11 +153,42 @@
 
     private async Task ValidateGitHubUrl()
     {
-        if (!string.IsNullOrEmpty(githubUrl))
+        if (string.IsNullOrEmpty(githubUrl))
         {
-            // In a real implementation, this would validate the GitHub URL
-            isSourceValid = true;
-            AppState.SetNotification("GitHub URL validated successfully", NotificationType.Success);
+            AppState.SetNotification("Please enter a GitHub repository URL", NotificationType.Error);
+            return;
+        }
+
+        try
+        {
+            var request = new ValidateRepositoryRequest { RepositoryUrl = githubUrl };
+            var response = await Http.PostAsJsonAsync("api/tutorial/validate", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ValidateRepositoryResponse>();
+                if (result != null && result.Valid)
+                {
+                    isSourceValid = true;
+                    AppState.SetNotification(result.Message, NotificationType.Success);
+                }
+                else
+                {
+                    isSourceValid = false;
+                    AppState.SetNotification(result?.Message ?? "Invalid repository", NotificationType.Error);
+                }
+            }
+            else
+            {
+                isSourceValid = false;
+                var errorContent = await response.Content.ReadAsStringAsync();
+                AppState.SetNotification($"Failed to validate repository: {errorContent}", NotificationType.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            isSourceValid = false;
+            AppState.SetNotification($"Error validating repository: {ex.Message}", NotificationType.Error);
         }
     }
 

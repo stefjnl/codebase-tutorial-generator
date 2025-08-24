@@ -73,6 +73,15 @@
         await JS.InvokeVoidAsync("clickElement", fileInput);
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Ensure the file input is properly initialized
+            StateHasChanged();
+        }
+    }
+
     public class FileInfo
     {
         public string Name { get; set; } = "";

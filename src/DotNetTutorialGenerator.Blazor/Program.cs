@@ -15,6 +15,7 @@ using DotNetTutorialGenerator.Infrastructure.Roslyn;
 using DotNetTutorialGenerator.Infrastructure.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,8 +43,10 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Add data protection services
-builder.Services.AddDataProtection();
+// Add data protection services with file system key protection for containerized environments
+builder.Services.AddDataProtection()
+    .SetApplicationName("DotNetTutorialGenerator")
+    .PersistKeysToFileSystem(new DirectoryInfo("/app/keys"));
 
 // Add Blazored services
 builder.Services.AddBlazoredLocalStorage();

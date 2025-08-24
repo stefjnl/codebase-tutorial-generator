@@ -15,8 +15,9 @@ services:
     volumes:
       - ./samples:/app/samples
       - ./output:/app/output
+      - ./keys:/app/keys
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/api/health" ]
+      test: [ "CMD", "dotnet", "DotNetTutorialGenerator.Api.dll" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -36,8 +37,9 @@ services:
     volumes:
       - ./samples:/app/samples
       - ./output:/app/output
+      - ./keys:/app/keys
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/" ]
+      test: [ "CMD", "dotnet", "DotNetTutorialGenerator.Blazor.dll" ]
       interval: 30s
       timeout: 10s
       retries: 3
