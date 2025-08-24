@@ -1,15 +1,17 @@
 @using System.Linq
 <div class="progress-container">
-    <div class="progress-info mb-2">
-        <span class="phase">@CurrentPhase</span>
-        <span class="percentage">@Progress%</span>
+    <div class="progress-info mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="phase fw-bold">@CurrentPhase</span>
+            <span class="percentage badge bg-primary">@Progress%</span>
+        </div>
     </div>
-    <div class="progress-bar-container">
+    <div class="progress-bar-container mb-4">
         <div class="progress-bar" role="progressbar" style="width: @Progress%" aria-valuenow="@Progress"
             aria-valuemin="0" aria-valuemax="100">
         </div>
     </div>
-    <div class="progress-steps mt-3">
+    <div class="progress-steps">
         @for (int i = 0; i < phases.Length; i++)
         {
             <div class="step @(i < currentPhaseIndex ? "completed" : (i == currentPhaseIndex ? "active" : ""))">
@@ -18,9 +20,13 @@
                     {
                         <i class="bi bi-check-circle-fill"></i>
                     }
+                    else if (i == currentPhaseIndex)
+                    {
+                        <i class="bi bi-arrow-right-circle-fill"></i>
+                    }
                     else
                     {
-                        @(i + 1)
+                        <i class="bi bi-circle"></i>
                     }
                 </div>
                 <div class="step-label">@phases[i]</div>

@@ -85,6 +85,6 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 // Add SignalR hub endpoints
-app.MapHub<TutorialProgressHub>("/tutorialprogresshub");
+app.MapHub<TutorialProgressHub>("/tutorialprogress");
 
 app.Run();

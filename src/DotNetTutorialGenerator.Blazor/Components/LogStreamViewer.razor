@@ -1,20 +1,27 @@
 @using DotNetTutorialGenerator.Blazor.Services
 @using Microsoft.JSInterop
 @inject IAppState AppState
+@inject IJSRuntime JSRuntime
 <div class="log-stream-viewer">
     <div class="log-header">
-        <h5>Generation Log</h5>
-        <button class="btn btn-sm btn-outline-secondary" @onclick="ClearLogs">
-            <i class="bi bi-trash"></i> Clear
-        </button>
+        <h5><i class="bi bi-terminal"></i> Generation Log</h5>
+        <div class="log-actions">
+            <button class="btn btn-sm btn-outline-secondary me-2" @onclick="CopyLogs">
+                <i class="bi bi-clipboard"></i> Copy
+            </button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="ClearLogs">
+                <i class="bi bi-trash"></i> Clear
+            </button>
+        </div>
     </div>
     <div class="log-container" @ref="logContainer">
         @if (Logs != null && Logs.Any())
         {
-            @foreach (var log in Logs)
+            @for (int i = 0; i < Logs.Count(); i++)
             {
+                var log = Logs.ElementAt(i);
                 <div class="log-entry">
-                    <span class="log-timestamp">[@DateTime.Now.ToString("HH:mm:ss")]</span>
+                    <span class="log-timestamp">[@GetTimestamp(i)]</span>
                     <span class="log-message">@log</span>
                 </div>
             }
@@ -22,7 +29,8 @@
         else
         {
             <div class="log-empty">
-                <p>No log messages yet. Generation will start shortly...</p>
+                <i class="bi bi-info-circle" style="font-size: 2rem;"></i>
+                <p class="mt-2">No log messages yet. Generation will start shortly...</p>
             </div>
         }
     </div>
@@ -38,6 +46,24 @@
     {
         // In a real implementation, this would clear the logs
         AppState.SetNotification("Logs cleared", NotificationType.Info);
+    }
+
+    private async Task CopyLogs()
+    {
+        if (Logs != null && Logs.Any())
+        {
+            var logText = string.Join("\n", Logs);
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", logText);
+            AppState.SetNotification("Logs copied to clipboard", NotificationType.Success);
+        }
+    }
+
+    private string GetTimestamp(int index)
+    {
+        // In a real implementation, this would use actual timestamps from the log entries
+        // For now, we'll generate a timestamp based on the index
+        var baseTime = DateTime.Now.AddSeconds(-Logs.Count() + index);
+        return baseTime.ToString("HH:mm:ss");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
