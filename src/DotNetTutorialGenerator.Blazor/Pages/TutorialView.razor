@@ -1,0 +1,97 @@
+@page "/tutorial/{tutorialId:int}"
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using DotNetTutorialGenerator.Blazor.Components
+@inject NavigationManager NavigationManager
+
+<PageTitle>Tutorial View</PageTitle>
+
+<h1>Tutorial View</h1>
+
+<div class="row">
+    <div class="col-12">
+        <SplitLayout>
+            <div class="split-pane-left">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Code</h3>
+                    </div>
+                    <div class="card-body">
+                        <CodeHighlighter Code="@sampleCode" Language="csharp" />
+                    </div>
+                </div>
+            </div>
+            <div class="split-pane-right">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Tutorial</h3>
+                    </div>
+                    <div class="card-body">
+                        <h2>Understanding the SampleWebApi Project</h2>
+                        <p>This tutorial will help you understand the structure and functionality of the SampleWebApi
+                            project.</p>
+
+                        <h3>Project Structure</h3>
+                        <MermaidDiagram Definition="@mermaidDiagram" />
+
+                        <h3>Key Components</h3>
+                        <ul>
+                            <li><strong>Program.cs</strong>: Entry point of the application</li>
+                            <li><strong>ProductsController.cs</strong>: Handles product-related HTTP requests</li>
+                            <li><strong>ProductService.cs</strong>: Implements business logic for products</li>
+                            <li><strong>Product.cs</strong>: Data model for products</li>
+                        </ul>
+
+                        <h3>How It Works</h3>
+                        <p>The API follows a standard RESTful pattern with CRUD operations for managing products.</p>
+                    </div>
+                </div>
+            </div>
+        </SplitLayout>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int TutorialId { get; set; }
+
+    private string sampleCode = @"using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen(c =>
+{
+c.SwaggerDoc(""v1"", new OpenApiInfo { Title = ""SampleWebApi"", Version = ""v1"" });
+});
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+app.UseSwagger();
+app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();";
+
+    private string mermaidDiagram = @"graph TD
+A[Client] --> B[Controller]
+B --> C[Service]
+C --> D[Repository]
+C --> E[Model]
+B --> F[DTO]";
+
+    protected override void OnInitialized()
+    {
+        // In a real implementation, this would load the tutorial data based on the ID
+    }
+}

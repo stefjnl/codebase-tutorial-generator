@@ -1,0 +1,81 @@
+@using DotNetTutorialGenerator.Blazor.Services
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@inject IAppState AppState
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+<div class="drop-zone" @ondragover="OnDragOver" @ondragleave="OnDragLeave" @ondrop="OnDrop">
+    <div class="drop-zone-content">
+        <i class="bi bi-cloud-upload" style="font-size: 3rem;"></i>
+        <p>Drag and drop files here or click to select</p>
+        <input type="file" @ref="fileInput" style="display: none;" @onchange="OnFileSelected" multiple />
+        <button class="btn btn-primary" @onclick="SelectFiles">Select Files</button>
+    </div>
+</div>
+
+<div class="file-list mt-3" @if="selectedFiles.Any()">
+    <h5>Selected Files:</h5>
+    <ul class="list-group">
+        @foreach (var file in selectedFiles)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @file.Name
+                <span class="badge bg-secondary rounded-pill">@file.Size</span>
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    private ElementReference fileInput;
+    private List<FileInfo> selectedFiles = new List<FileInfo>();
+
+    [Parameter]
+    public EventCallback<IEnumerable<string>> OnFilesSelected { get; set; }
+
+    private void OnDragOver(DragEventArgs e)
+    {
+        // In Blazor, we can't directly call PreventDefault on DragEventArgs
+        // This will be handled by the JavaScript interop
+    }
+
+    private void OnDragLeave(DragEventArgs e)
+    {
+        // In Blazor, we can't directly call PreventDefault on DragEventArgs
+        // This will be handled by the JavaScript interop
+    }
+
+    private async Task OnDrop(DragEventArgs e)
+    {
+        // In Blazor, we can't directly call PreventDefault on DragEventArgs
+        // This will be handled by the JavaScript interop
+        // In a real implementation, this would handle dropped files
+        // For now, we'll just show a notification
+        AppState.SetNotification("Files dropped successfully", NotificationType.Success);
+    }
+
+    private async Task OnFileSelected(ChangeEventArgs e)
+    {
+        // In a real implementation, this would handle selected files
+        // For now, we'll just show a notification
+        AppState.SetNotification("Files selected successfully", NotificationType.Success);
+
+        if (OnFilesSelected.HasDelegate)
+        {
+            await OnFilesSelected.InvokeAsync(selectedFiles.Select(f => f.Name));
+        }
+    }
+
+    private async Task SelectFiles()
+    {
+        // In Blazor, we can't directly call ClickAsync on ElementReference
+        // We'll use JavaScript interop instead
+        await JS.InvokeVoidAsync("clickElement", fileInput);
+    }
+
+    public class FileInfo
+    {
+        public string Name { get; set; } = "";
+        public string Size { get; set; } = "";
+    }
+}

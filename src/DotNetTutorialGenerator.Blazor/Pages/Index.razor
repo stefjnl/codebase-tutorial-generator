@@ -1,0 +1,41 @@
+@page "/"
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using DotNetTutorialGenerator.Blazor.Components
+@using DotNetTutorialGenerator.Blazor.Services
+@inject NavigationManager NavigationManager
+
+<PageTitle>Dashboard</PageTitle>
+
+<h1>Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Quick Start</h3>
+            </div>
+            <div class="card-body">
+                <p>Generate a new tutorial from a GitHub repository or local files.</p>
+                <button class="btn btn-primary" @onclick="GoToGenerate">Generate Tutorial</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Recent Activity</h3>
+            </div>
+            <div class="card-body">
+                <p>No recent activity found.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void GoToGenerate()
+    {
+        NavigationManager.NavigateTo("/generate");
+    }
+}

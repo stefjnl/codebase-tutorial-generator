@@ -1,0 +1,55 @@
+@using System.Linq
+<div class="progress-container">
+    <div class="progress-info mb-2">
+        <span class="phase">@CurrentPhase</span>
+        <span class="percentage">@Progress%</span>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" role="progressbar" style="width: @Progress%" aria-valuenow="@Progress"
+            aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+    <div class="progress-steps mt-3">
+        @for (int i = 0; i < phases.Length; i++)
+        {
+            <div class="step @(i < currentPhaseIndex ? "completed" : (i == currentPhaseIndex ? "active" : ""))">
+                <div class="step-icon">
+                    @if (i < currentPhaseIndex)
+                    {
+                        <i class="bi bi-check-circle-fill"></i>
+                    }
+                    else
+                    {
+                        @(i + 1)
+                    }
+                </div>
+                <div class="step-label">@phases[i]</div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Progress { get; set; } = 0;
+
+    [Parameter]
+    public string CurrentPhase { get; set; } = "";
+
+    private readonly string[] phases = {
+"Initializing",
+"Analyzing Code",
+"Generating Abstractions",
+"Creating Tutorial",
+"Finalizing"
+};
+
+    private int currentPhaseIndex => string.IsNullOrEmpty(CurrentPhase) ? 0 :
+    Array.IndexOf(phases, CurrentPhase) >= 0 ? Array.IndexOf(phases, CurrentPhase) : 0;
+
+    protected override void OnParametersSet()
+    {
+        // Update current phase index based on the CurrentPhase parameter
+        StateHasChanged();
+    }
+}

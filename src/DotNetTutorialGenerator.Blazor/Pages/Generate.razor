@@ -1,0 +1,152 @@
+@page "/generate"
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using DotNetTutorialGenerator.Blazor.Components
+@using DotNetTutorialGenerator.Blazor.Services
+@inject IAppState AppState
+@inject ITutorialGenerationService TutorialGenerationService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Generate Tutorial</PageTitle>
+
+<h1>Generate Tutorial</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Source Selection</h3>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="sourceTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="github-tab" data-bs-toggle="tab" data-bs-target="#github" type="button" role="tab">GitHub</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="local-tab" data-bs-toggle="tab" data-bs-target="#local" type="button" role="tab">Local Files</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="sourceTabsContent">
+                    <div class="tab-pane fade show active" id="github" role="tabpanel">
+                        <div class="mb-3">
+                            <label for="githubUrl" class="form-label">GitHub Repository URL</label>
+                            <input type="text" class="form-control" id="githubUrl" placeholder="https://github.com/user/repo" @bind="githubUrl">
+                        </div>
+                        <button class="btn btn-primary" @onclick="ValidateGitHubUrl">Validate</button>
+                    </div>
+                    <div class="tab-pane fade" id="local" role="tabpanel">
+                        <FileDropZone OnFilesSelected="HandleFilesSelected" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h3>Generation Configuration</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="language" class="form-label">Language</label>
+                    <select class="form-select" id="language" @bind="selectedLanguage">
+                        <option value="English">English</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="French">French</option>
+                        <option value="German">German</option>
+                        <option value="Chinese">Chinese</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="maxAbstractions" class="form-label">Max Abstractions: @maxAbstractions</label>
+                    <input type="range" class="form-range" id="maxAbstractions" min="5" max="25" @bind="maxAbstractions">
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="generateDiagrams" @bind="generateDiagrams">
+                    <label class="form-check-label" for="generateDiagrams">
+                        Generate Architecture Diagrams
+                    </label>
+                </div>
+                <button class="btn btn-success" @onclick="GenerateTutorial" disabled="@(!isSourceValid || isGenerating)">Generate Tutorial</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Progress</h3>
+            </div>
+            <div class="card-body">
+                @if (isGenerating)
+                {
+                    <ProgressIndicator Progress="@currentProgress" CurrentPhase="@currentPhase" />
+                    <LogStreamViewer Logs="@logMessages" />
+                }
+                else
+                {
+                    <p>Configure your tutorial generation settings and click "Generate Tutorial" to begin.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string githubUrl = "";
+    private bool isSourceValid = false;
+    private string selectedLanguage = "English";
+    private int maxAbstractions = 15;
+    private bool generateDiagrams = true;
+    private bool isGenerating = false;
+    private int currentProgress = 0;
+    private string currentPhase = "";
+    private List<string> logMessages = new List<string>();
+
+    private async Task ValidateGitHubUrl()
+    {
+        if (!string.IsNullOrEmpty(githubUrl))
+        {
+            // In a real implementation, this would validate the GitHub URL
+            isSourceValid = true;
+            AppState.SetNotification("GitHub URL validated successfully", NotificationType.Success);
+        }
+    }
+
+    private void HandleFilesSelected(IEnumerable<string> files)
+    {
+        // In a real implementation, this would handle the selected files
+        isSourceValid = files.Any();
+        AppState.SetNotification($"Selected {files.Count()} files for processing", NotificationType.Success);
+    }
+
+    private async Task GenerateTutorial()
+    {
+        isGenerating = true;
+        currentProgress = 0;
+        logMessages.Clear();
+
+        // In a real implementation, this would connect to the SignalR hub
+        // and start the tutorial generation process
+        try
+        {
+            // Simulate progress updates
+            for (int i = 0; i <= 100; i += 10)
+            {
+                currentProgress = i;
+                currentPhase = $"Processing phase {i/10 + 1}";
+                logMessages.Add($"Progress: {i}% - {currentPhase}");
+                StateHasChanged();
+                await Task.Delay(500); // Simulate work
+            }
+
+            AppState.SetNotification("Tutorial generation completed successfully", NotificationType.Success);
+        }
+        catch (Exception ex)
+        {
+            AppState.SetNotification($"Error during generation: {ex.Message}", NotificationType.Error);
+        }
+        finally
+        {
+            isGenerating = false;
+        }
+    }
+}

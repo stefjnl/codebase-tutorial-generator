@@ -1,0 +1,109 @@
+@page "/settings"
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using DotNetTutorialGenerator.Blazor.Services
+@inject IAppState AppState
+
+<PageTitle>Settings</PageTitle>
+
+<h1>Settings</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>LLM Configuration</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="llmProvider" class="form-label">LLM Provider</label>
+                    <select class="form-select" id="llmProvider" @bind="selectedLlmProvider">
+                        <option value="OpenAI">OpenAI</option>
+                        <option value="Claude">Claude</option>
+                        <option value="LMStudio">LM Studio</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="apiKey" class="form-label">API Key</label>
+                    <input type="password" class="form-control" id="apiKey" @bind="apiKey">
+                </div>
+                <div class="mb-3">
+                    <label for="model" class="form-label">Model</label>
+                    <input type="text" class="form-control" id="model" @bind="selectedModel">
+                </div>
+                <button class="btn btn-primary" @onclick="SaveLlmSettings">Save</button>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h3>Appearance</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="darkMode" @bind="isDarkMode">
+                    <label class="form-check-label" for="darkMode">Dark Mode</label>
+                </div>
+                <button class="btn btn-primary" @onclick="SaveAppearanceSettings">Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>GitHub Configuration</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="githubToken" class="form-label">Personal Access Token</label>
+                    <input type="password" class="form-control" id="githubToken" @bind="githubToken">
+                </div>
+                <button class="btn btn-primary" @onclick="SaveGitHubSettings">Save</button>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h3>Caching</h3>
+            </div>
+            <div class="card-body">
+                <p>Cache Status: @cacheStatus</p>
+                <button class="btn btn-warning" @onclick="ClearCache">Clear Cache</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string selectedLlmProvider = "OpenAI";
+    private string apiKey = "";
+    private string selectedModel = "gpt-4";
+    private bool isDarkMode = false;
+    private string githubToken = "";
+    private string cacheStatus = "Active (0 MB)";
+
+    private void SaveLlmSettings()
+    {
+        // In a real implementation, this would save to a service
+        AppState.SetNotification("LLM settings saved successfully", NotificationType.Success);
+    }
+
+    private void SaveAppearanceSettings()
+    {
+        // In a real implementation, this would save to a service
+        AppState.SetNotification("Appearance settings saved successfully", NotificationType.Success);
+    }
+
+    private void SaveGitHubSettings()
+    {
+        // In a real implementation, this would save to a service
+        AppState.SetNotification("GitHub settings saved successfully", NotificationType.Success);
+    }
+
+    private void ClearCache()
+    {
+        // In a real implementation, this would clear the cache
+        cacheStatus = "Cleared";
+        AppState.SetNotification("Cache cleared successfully", NotificationType.Success);
+    }
+}

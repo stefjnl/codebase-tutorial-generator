@@ -8,7 +8,7 @@ A tool that analyzes .NET codebases and generates beginner-friendly tutorials ex
 - **.NET-Specific Understanding**: Deep understanding of .NET patterns and practices
 - **LLM Integration**: Uses OpenAI GPT-4, Claude, or LM Studio for semantic analysis
 - **Clean Architecture**: Well-structured codebase following clean architecture principles
-- **Multiple Interfaces**: Both RESTful API and CLI interfaces
+- **Multiple Interfaces**: RESTful API, CLI, and Web UI interfaces
 - **Docker Support**: Easy deployment with Docker containers
 - **Comprehensive Testing**: Unit and integration tests included
 - **Advanced .NET Analysis**: NuGet package analysis, configuration pattern detection, middleware pipeline mapping
@@ -16,6 +16,7 @@ A tool that analyzes .NET codebases and generates beginner-friendly tutorials ex
 - **Progress Tracking**: Real-time progress reporting for long-running operations
 - **Enhanced Error Handling**: Custom exceptions with context and retry policies
 - **Metrics Collection**: Performance and usage monitoring
+- **Web UI**: Blazor Server web interface for easy tutorial generation and management
 
 ## Architecture
 
@@ -50,7 +51,25 @@ docker-compose up -d api
 
 # Run the console application
 docker run --rm -v $(pwd)/samples:/app/samples dotnettutorialgenerator-console generate --dir /app/samples/SampleWebApi --output /app/samples/output/tutorial.md
+
+# Run the Blazor web UI
+docker-compose up -d blazor
 ```
+
+### Running the Blazor Web UI
+
+The Blazor web UI provides a user-friendly interface for generating tutorials. To access it:
+
+1. Run the application using docker-compose as shown above
+2. Open your browser and navigate to `https://localhost:5001` or `http://localhost:5000`
+3. Use the web interface to generate tutorials from GitHub repositories or local files
+
+The web UI includes features such as:
+- Real-time progress tracking during tutorial generation
+- File upload via drag-and-drop or GitHub URL
+- Tutorial history and management
+- Syntax-highlighted code display
+- Architecture diagram visualization
 
 ### Running Locally
 
@@ -60,7 +79,18 @@ dotnet run --project src/DotNetTutorialGenerator.Api
 
 # Run the console application
 dotnet run --project src/DotNetTutorialGenerator.Console -- generate --dir ./samples/SampleWebApi --output ./samples/output/tutorial.md
+
+# Run the Blazor web UI
+dotnet run --project src/DotNetTutorialGenerator.Blazor
 ```
+
+### Accessing the Blazor Web UI
+
+To access the Blazor web UI when running locally:
+
+1. Run the Blazor project as shown above
+2. Open your browser and navigate to `https://localhost:59174` or `http://localhost:59175`
+3. Use the web interface to generate tutorials from GitHub repositories or local files
 
 ## Usage
 
