@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   api:
     build:
@@ -5,23 +7,20 @@ services:
       dockerfile: ./Dockerfile
       target: final-api
     ports:
-      - "8082:80" # Changed to avoid conflict with Blazor
+      - "8082:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_HTTP_PORTS=8080
     volumes:
-      - ./samples:/samples
-      - ./output:/output
-    entrypoint: [ "dotnet", "DotNetTutorialGenerator.Api.dll" ]
-
-  console:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-      target: final-console
-    volumes:
-      - ./samples:/samples
-      - ./output:/output
-    entrypoint: [ "dotnet", "DotNetTutorialGenerator.Console.dll" ]
+      - ./samples:/app/samples
+      - ./output:/app/output
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/api/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
 
   blazor:
     build:
@@ -29,11 +28,31 @@ services:
       dockerfile: ./Dockerfile
       target: final-blazor
     ports:
-      - "8081:8080" # Host 8081 -> Container 8080
+      - "8081:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_HTTP_PORTS=8080
     volumes:
-      - ./samples:/samples
-      - ./output:/output
-    entrypoint: [ "dotnet", "DotNetTutorialGenerator.Blazor.dll" ]
+      - ./samples:/app/samples
+      - ./output:/app/output
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Console app - only run when needed, don't keep it running
+  # Use: docker-compose run --rm console generate --help
+  console:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: final-console
+    volumes:
+      - ./samples:/app/samples
+      - ./output:/app/output
+    profiles:
+      - tools # This prevents it from starting by default
+    # Remove the entrypoint override since the Dockerfile sets it correctly
