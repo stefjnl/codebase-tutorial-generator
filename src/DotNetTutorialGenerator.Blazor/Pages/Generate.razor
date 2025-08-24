@@ -174,7 +174,7 @@
 
         // Connect to the SignalR hub for real-time progress updates
         var connection = new HubConnectionBuilder()
-        .WithUrl(NavigationManager.ToAbsoluteUri("/tutorialprogress"))
+        .WithUrl($"{NavigationManager.BaseUri}tutorialprogress")
         .Build();
 
         connection.On<GenerationProgress>("ReceiveProgressUpdate", (progress) =>

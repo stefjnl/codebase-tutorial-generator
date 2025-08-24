@@ -30,6 +30,21 @@ builder.Services.AddResponseCompression(opts =>
 
 builder.Services.AddSignalR();
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
+// Add data protection services
+builder.Services.AddDataProtection();
+
 // Add Blazored services
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredToast();
@@ -79,6 +94,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseResponseCompression();
+app.UseCors("AllowAll");
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()

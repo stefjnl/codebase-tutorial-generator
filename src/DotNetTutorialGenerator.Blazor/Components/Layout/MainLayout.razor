@@ -27,27 +27,26 @@
         </header>
 
         <div class="content-container">
-            @Body
+            <!-- Global Error Boundary -->
+            <ErrorBoundary>
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent Context="exception">
+                    <div class="alert alert-danger m-3" role="alert">
+                        <h4 class="alert-heading">An error has occurred</h4>
+                        <p>@exception.Message</p>
+                        <button type="button" class="btn btn-primary"
+                            @onclick="() => AppState.ClearNotification()">Clear</button>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
         </div>
     </main>
 </div>
 
 <!-- Notification Toast -->
 <BlazoredToast />
-
-<!-- Global Error Boundary -->
-<ErrorBoundary>
-    <ChildContent>
-        @Body
-    </ChildContent>
-    <ErrorContent Context="exception">
-        <div class="alert alert-danger m-3" role="alert">
-            <h4 class="alert-heading">An error has occurred</h4>
-            <p>@exception.Message</p>
-            <button type="button" class="btn btn-primary" @onclick="() => AppState.ClearNotification()">Clear</button>
-        </div>
-    </ErrorContent>
-</ErrorBoundary>
 
 <div id="blazor-error-ui">
     <environment include="Staging,Production">
