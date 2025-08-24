@@ -2,7 +2,7 @@
 
 ## Overview
 
-The DotNet Tutorial Generator API provides endpoints for generating tutorials from .NET codebases. The API follows REST principles and returns JSON responses.
+The DotNet Tutorial Generator API provides endpoints for generating tutorials from .NET codebases. The API follows REST principles and returns JSON responses. The application has been migrated to .NET 9.0 to take advantage of the latest features and performance improvements.
 
 ## Base URL
 

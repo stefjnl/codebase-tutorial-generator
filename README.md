@@ -29,7 +29,7 @@ The application follows a clean architecture pattern with the following layers:
 
 ## Prerequisites
 
-- .NET 8.0 SDK
+- .NET 9.0 SDK
 - Docker (optional, for containerized deployment)
 - OpenAI or Claude API key (for LLM features)
 
@@ -171,6 +171,7 @@ dotnet test tests/DotNetTutorialGenerator.Core.Tests
 
 - [Design Document](docs/design.md)
 - [API Documentation](docs/api-documentation.md)
+- [.NET 9.0 Migration Summary](docs/migration-summary.md)
 
 ## Contributing
 
