@@ -12,7 +12,9 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfiguration();
-builder.Services.AddTutorialGeneratorServices();
+
+// Add tutorial generator services with configuration
+builder.Services.AddTutorialGeneratorServices(builder.Configuration);
 
 // Add CORS
 builder.Services.AddCors(options =>

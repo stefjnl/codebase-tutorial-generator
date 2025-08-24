@@ -1,16 +1,21 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Blazored.LocalStorage;
+using Blazored.Toast;
 using DotNetTutorialGenerator.Blazor;
 using DotNetTutorialGenerator.Blazor.Components;
 using DotNetTutorialGenerator.Blazor.Components.Layout;
-using DotNetTutorialGenerator.Blazor.Services;
 using DotNetTutorialGenerator.Blazor.Hubs;
-using Blazored.LocalStorage;
-using Blazored.Toast;
-
+using DotNetTutorialGenerator.Blazor.Services;
+using DotNetTutorialGenerator.Core.Interfaces;
+using DotNetTutorialGenerator.Core.Services;
+using DotNetTutorialGenerator.Infrastructure.FileSystem;
+using DotNetTutorialGenerator.Infrastructure.GitHub;
+using DotNetTutorialGenerator.Infrastructure.LLM;
+using DotNetTutorialGenerator.Infrastructure.Persistence;
+using DotNetTutorialGenerator.Infrastructure.Roslyn;
+using DotNetTutorialGenerator.Infrastructure.Services;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.ResponseCompression;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +34,35 @@ builder.Services.AddSignalR();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredToast();
 
-// Add custom services
+// Add memory cache
+builder.Services.AddMemoryCache();
+
+// Add tutorial generator services
+builder.Services.AddScoped<IRepositoryCrawler, LocalRepositoryCrawler>();
+builder.Services.AddScoped<IRoslynAnalyzer, RoslynAnalyzer>();
+builder.Services.AddScoped<ITutorialGenerator, TutorialFileWriter>();
+builder.Services.AddHttpClient<GitHubApiClient>();
+
+// Add LLM service with configuration
+builder.Services.AddScoped<ILLMService>(serviceProvider =>
+{
+    var config = serviceProvider.GetRequiredService<IConfiguration>();
+    var llmSettings = config.GetSection("LLMSettings");
+    var provider = llmSettings.GetValue<string>("Provider") ?? "openai";
+    var apiKey = llmSettings.GetValue<string>("ApiKey") ?? "";
+
+    return provider.ToLowerInvariant() switch
+    {
+        "openai" => new OpenAIService(apiKey),
+        "claude" => new ClaudeService(apiKey),
+        _ => new OpenAIService(apiKey)
+    };
+});
+
+// Add missing core services
+builder.Services.AddScoped<ITutorialOrchestrator, TutorialOrchestrator>();
+
+// Add custom Blazor services
 builder.Services.AddScoped<IAppState, AppState>();
 builder.Services.AddScoped<ITutorialGenerationService, TutorialGenerationService>();
 
@@ -44,7 +77,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseResponseCompression();
 app.UseAntiforgery();

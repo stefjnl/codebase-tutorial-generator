@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copy all project files for dependency resolution
@@ -19,44 +19,35 @@ RUN dotnet restore "src/DotNetTutorialGenerator.Blazor/DotNetTutorialGenerator.B
 # Copy remaining files
 COPY . .
 
-# Build the projects
-WORKDIR "/src/src/DotNetTutorialGenerator.Api"
-RUN dotnet build "DotNetTutorialGenerator.Api.csproj" -c Release -o /app/build/api
-
-WORKDIR "/src/src/DotNetTutorialGenerator.Console"
-RUN dotnet build "DotNetTutorialGenerator.Console.csproj" -c Release -o /app/build/console
-
-WORKDIR "/src/src/DotNetTutorialGenerator.Blazor"
-RUN dotnet build "DotNetTutorialGenerator.Blazor.csproj" -c Release -o /app/build/blazor
-
-# Stage 2: Publish
+# Stage 2: Publish (skip separate build stage)
 FROM build AS publish
 
+# Publish directly without separate build step
 WORKDIR "/src/src/DotNetTutorialGenerator.Api"
-RUN dotnet publish "DotNetTutorialGenerator.Api.csproj" -c Release -o /app/publish/api --no-build
+RUN dotnet publish "DotNetTutorialGenerator.Api.csproj" -c Release -o /app/publish/api
 
 WORKDIR "/src/src/DotNetTutorialGenerator.Console"
-RUN dotnet publish "DotNetTutorialGenerator.Console.csproj" -c Release -o /app/publish/console --no-build
+RUN dotnet publish "DotNetTutorialGenerator.Console.csproj" -c Release -o /app/publish/console
 
 WORKDIR "/src/src/DotNetTutorialGenerator.Blazor"
-RUN dotnet publish "DotNetTutorialGenerator.Blazor.csproj" -c Release -o /app/publish/blazor --no-build
+RUN dotnet publish "DotNetTutorialGenerator.Blazor.csproj" -c Release -o /app/publish/blazor
 
 # Stage 3: Final image (API)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final-api
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final-api
 WORKDIR /app
 COPY --from=publish /app/publish/api .
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "DotNetTutorialGenerator.Api.dll"]
 
 # Stage 4: Final image (Console)
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS final-console
+FROM mcr.microsoft.com/dotnet/runtime:9.0 AS final-console
 WORKDIR /app
 COPY --from=publish /app/publish/console .
 # Note: Console apps exit after completion - this is expected behavior
 ENTRYPOINT ["dotnet", "DotNetTutorialGenerator.Console.dll"]
 
 # Stage 5: Final image (Blazor)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final-blazor
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final-blazor
 WORKDIR /app
 COPY --from=publish /app/publish/blazor .
 EXPOSE 8080
