@@ -23,15 +23,54 @@ A tool that analyzes .NET codebases and generates beginner-friendly tutorials ex
 The application follows a clean architecture pattern with the following layers:
 
 - **Core**: Domain models and interfaces
-- **Infrastructure**: Implementation of interfaces (GitHub, LLM, FileSystem, Roslyn)
+- **Infrastructure**: Implementation of core interfaces
 - **API**: RESTful web API
 - **Console**: Command-line interface
+- **Blazor**: Web user interface
+
+### Project Structure
+
+```
+DotNetTutorialGenerator/
+├── src/
+│   ├── DotNetTutorialGenerator.Core/          # Core domain models and interfaces
+│   ├── DotNetTutorialGenerator.Infrastructure/ # Implementation of core interfaces
+│   │   ├── Caching/                           # LLM response caching
+│   │   ├── FileSystem/                        # Local file system operations
+│   │   ├── GitHub/                            # GitHub repository integration
+│   │   ├── LLM/                               # LLM service implementations
+│   │   ├── Monitoring/                        # Performance metrics collection
+│   │   ├── Persistence/                       # Data persistence (file writing)
+│   │   ├── Roslyn/                            # .NET code analysis using Roslyn
+│   │   └── Services/                          # Core service implementations
+│   ├── DotNetTutorialGenerator.Api/           # RESTful web API
+│   ├── DotNetTutorialGenerator.Console/       # Command-line interface
+│   └── DotNetTutorialGenerator.Blazor/        # Blazor web UI
+├── tests/                                     # Unit and integration tests
+├── samples/                                   # Sample projects for testing
+├── output/                                    # Generated tutorial output
+├── docs/                                      # Documentation
+└── docker/                                    # Docker configuration
+```
+
+## Technologies
+
+- **.NET 9.0**: Latest .NET framework for performance and features
+- **ASP.NET Core**: Web API and Blazor Server implementation
+- **Roslyn**: .NET Compiler Platform for code analysis
+- **System.CommandLine**: Modern command-line parsing
+- **Blazor Server**: Interactive web UI with real-time updates
+- **SignalR**: Real-time communication for progress tracking
+- **Docker**: Containerization for easy deployment
+- **Serilog**: Structured logging
+- **Swashbuckle**: API documentation with Swagger
+- **Octokit**: GitHub API client
 
 ## Prerequisites
 
-- .NET 9.0 SDK
-- Docker (optional, for containerized deployment)
-- OpenAI or Claude API key (for LLM features)
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [Docker](https://www.docker.com/products/docker-desktop) (optional, for containerized deployment)
+- OpenAI, Claude, or LM Studio API key (for LLM features)
 
 ## Getting Started
 
@@ -56,21 +95,6 @@ docker run --rm -v $(pwd)/samples:/app/samples dotnettutorialgenerator-console g
 docker-compose up -d blazor
 ```
 
-### Running the Blazor Web UI
-
-The Blazor web UI provides a user-friendly interface for generating tutorials. To access it:
-
-1. Run the application using docker-compose as shown above
-2. Open your browser and navigate to `https://localhost:5001` or `http://localhost:5000`
-3. Use the web interface to generate tutorials from GitHub repositories or local files
-
-The web UI includes features such as:
-- Real-time progress tracking during tutorial generation
-- File upload via drag-and-drop or GitHub URL
-- Tutorial history and management
-- Syntax-highlighted code display
-- Architecture diagram visualization
-
 ### Running Locally
 
 ```bash
@@ -83,14 +107,6 @@ dotnet run --project src/DotNetTutorialGenerator.Console -- generate --dir ./sam
 # Run the Blazor web UI
 dotnet run --project src/DotNetTutorialGenerator.Blazor
 ```
-
-### Accessing the Blazor Web UI
-
-To access the Blazor web UI when running locally:
-
-1. Run the Blazor project as shown above
-2. Open your browser and navigate to `https://localhost:59174` or `http://localhost:59175`
-3. Use the web interface to generate tutorials from GitHub repositories or local files
 
 ## Usage
 
@@ -129,6 +145,24 @@ curl -X GET http://localhost:8080/api/tutorials/{id}/status
 curl -X GET http://localhost:8080/api/tutorials/{id}/download -o tutorial.md
 ```
 
+### Web UI
+
+The Blazor web UI provides a user-friendly interface for generating tutorials:
+
+1. Run the Blazor project:
+   ```bash
+   dotnet run --project src/DotNetTutorialGenerator.Blazor
+   ```
+2. Open your browser and navigate to `https://localhost:5001` or `http://localhost:5000`
+3. Use the web interface to generate tutorials from GitHub repositories or local files
+
+Features include:
+- Real-time progress tracking during tutorial generation
+- File upload via drag-and-drop or GitHub URL
+- Tutorial history and management
+- Syntax-highlighted code display
+- Architecture diagram visualization
+
 ## Configuration
 
 The application can be configured through:
@@ -143,18 +177,30 @@ Key configuration options include:
 - Crawl options (file patterns, size limits)
 - Output formats
 
-## Project Structure
+### LLM Configuration
 
+Configure your LLM provider in `appsettings.json`:
+
+```json
+{
+  "LLMSettings": {
+    "Provider": "openai",  // openai, claude, or lmstudio
+    "ApiKey": "your-api-key",
+    "BaseUrl": "http://localhost:1234/v1"  // For LM Studio
+  }
+}
 ```
-DotNetTutorialGenerator/
-├── src/
-│   ├── DotNetTutorialGenerator.Core/          # Core domain models and interfaces
-│   ├── DotNetTutorialGenerator.Infrastructure/ # Implementation of core interfaces
-│   ├── DotNetTutorialGenerator.Api/           # RESTful web API
-│   └── DotNetTutorialGenerator.Console/       # Command-line interface
-├── tests/                                     # Unit and integration tests
-├── docker/                                    # Docker configuration
-└── docs/                                      # Documentation
+
+### GitHub Configuration
+
+To analyze GitHub repositories, configure your GitHub token:
+
+```json
+{
+  "GitHub": {
+    "Token": "your-github-token"
+  }
+}
 ```
 
 ## Testing
