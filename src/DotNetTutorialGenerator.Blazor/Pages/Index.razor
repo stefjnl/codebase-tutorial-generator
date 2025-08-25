@@ -1,0 +1,114 @@
+@page "/"
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using DotNetTutorialGenerator.Blazor.Components
+@using DotNetTutorialGenerator.Blazor.Services
+@inject NavigationManager NavigationManager
+
+<PageTitle>Dashboard</PageTitle>
+
+<div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p class="lead">Transform .NET codebases into comprehensive tutorials with AI-powered analysis</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="bi bi-lightning-charge-fill text-primary"></i> Quick Start</h3>
+            </div>
+            <div class="card-body">
+                <p>Generate a new tutorial from a GitHub repository or local files.</p>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary btn-lg" @onclick="GoToGenerate">
+                        <i class="bi bi-play-circle-fill"></i> Generate Tutorial
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="bi bi-info-circle-fill text-info"></i> How It Works</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="feature-card">
+                            <div class="feature-icon bg-primary text-white">
+                                <i class="bi bi-cloud-download"></i>
+                            </div>
+                            <h5>1. Import Codebase</h5>
+                            <p>Provide a GitHub URL or upload local files to analyze.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="feature-card">
+                            <div class="feature-icon bg-success text-white">
+                                <i class="bi bi-cpu"></i>
+                            </div>
+                            <h5>2. AI Analysis</h5>
+                            <p>Our system analyzes the code structure and patterns.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="feature-card">
+                            <div class="feature-icon bg-info text-white">
+                                <i class="bi bi-diagram-3"></i>
+                            </div>
+                            <h5>3. Generate Tutorial</h5>
+                            <p>Create a comprehensive tutorial with diagrams and explanations.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="feature-card">
+                            <div class="feature-icon bg-warning text-white">
+                                <i class="bi bi-download"></i>
+                            </div>
+                            <h5>4. Export & Share</h5>
+                            <p>Download your tutorial in multiple formats or share directly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="bi bi-clock-history text-secondary"></i> Recent Activity</h3>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-5">
+                    <i class="bi bi-clock-history" style="font-size: 3rem; color: #ccc;"></i>
+                    <p class="mt-3">No recent activity found.</p>
+                    <p class="text-muted">Generate your first tutorial to see activity here.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="bi bi-stars text-warning"></i> Pro Tips</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-lightbulb text-warning"></i> Use clean, well-structured codebases
+                        for best results</li>
+                    <li class="mb-2"><i class="bi bi-lightbulb text-warning"></i> Include README files for better
+                        context</li>
+                    <li class="mb-2"><i class="bi bi-lightbulb text-warning"></i> Focus on specific features for
+                        detailed tutorials</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void GoToGenerate()
+    {
+        NavigationManager.NavigateTo("/generate");
+    }
+}

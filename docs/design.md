@@ -2,7 +2,7 @@
 
 ## Overview
 
-The DotNet Tutorial Generator is a tool that analyzes .NET codebases and generates beginner-friendly tutorials explaining how the code works. It supports both GitHub repositories and local directories as input sources.
+The DotNet Tutorial Generator is a tool that analyzes .NET codebases and generates beginner-friendly tutorials explaining how the code works. It supports both GitHub repositories and local directories as input sources. The application has been migrated to .NET 9.0 to take advantage of the latest features and performance improvements.
 
 ## Architecture
 

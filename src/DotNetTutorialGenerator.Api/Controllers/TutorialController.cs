@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using DotNetTutorialGenerator.Api.DTOs;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace DotNetTutorialGenerator.Api.Controllers
 {
@@ -103,6 +105,45 @@ namespace DotNetTutorialGenerator.Api.Controllers
             };
 
             return Content(tutorial.Content, contentType);
+        }
+
+        [HttpPost("validate")]
+        public async Task<ActionResult<ValidateRepositoryResponse>> ValidateRepository([FromBody] ValidateRepositoryRequest request)
+        {
+            // Basic URL validation
+            if (string.IsNullOrEmpty(request.RepositoryUrl))
+            {
+                return BadRequest("Repository URL is required");
+            }
+
+            // Check if it's a valid GitHub URL
+            if (!request.RepositoryUrl.StartsWith("https://github.com/"))
+            {
+                return BadRequest("Only GitHub repositories are supported");
+            }
+
+            try
+            {
+                // In a real implementation, you would check if the repository exists and contains .NET code
+                // For now, we'll just do a basic validation
+                var response = new ValidateRepositoryResponse
+                {
+                    Valid = true,
+                    Message = "Repository URL is valid"
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ValidateRepositoryResponse
+                {
+                    Valid = false,
+                    Message = $"Failed to validate repository: {ex.Message}"
+                };
+
+                return BadRequest(response);
+            }
         }
     }
 }

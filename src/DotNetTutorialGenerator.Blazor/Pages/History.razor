@@ -1,0 +1,107 @@
+@page "/history"
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using DotNetTutorialGenerator.Blazor.Services
+@inject NavigationManager NavigationManager
+@inject IAppState AppState
+
+<PageTitle>History</PageTitle>
+
+<h1>History</h1>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3>Generated Tutorials</h3>
+            </div>
+            <div class="card-body">
+                @if (tutorials.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Source</th>
+                                    <th>Date Generated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tutorial in tutorials)
+                                {
+                                    <tr>
+                                        <td>@tutorial.Title</td>
+                                        <td>@tutorial.Source</td>
+                                        <td>@tutorial.GeneratedDate.ToString("g")</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary"
+                                                @onclick="() => ViewTutorial(tutorial.Id)">View</button>
+                                            <button class="btn btn-sm btn-secondary ms-2"
+                                                @onclick="() => DownloadTutorial(tutorial.Id)">Download</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p>No tutorials have been generated yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<TutorialInfo> tutorials = new List<TutorialInfo>();
+
+    protected override void OnInitialized()
+    {
+        // In a real implementation, this would load from a service
+        LoadTutorials();
+    }
+
+    private void LoadTutorials()
+    {
+        // Sample data for demonstration
+        tutorials.Add(new TutorialInfo
+        {
+            Id = 1,
+            Title = "Sample Web API Tutorial",
+            Source = "GitHub: dotnet/samples",
+            GeneratedDate = DateTime.Now.AddDays(-1)
+        });
+
+        tutorials.Add(new TutorialInfo
+        {
+            Id = 2,
+            Title = "Console App Tutorial",
+            Source = "Local Files",
+            GeneratedDate = DateTime.Now.AddDays(-3)
+        });
+    }
+
+    private void ViewTutorial(int id)
+    {
+        NavigationManager.NavigateTo($"/tutorial/{id}");
+    }
+
+    private void DownloadTutorial(int id)
+    {
+        // In a real implementation, this would download the tutorial
+        // For now, we'll just show a notification
+        AppState.SetNotification($"Tutorial {id} download started", NotificationType.Info);
+    }
+
+    public class TutorialInfo
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public string Source { get; set; } = "";
+        public DateTime GeneratedDate { get; set; }
+    }
+}

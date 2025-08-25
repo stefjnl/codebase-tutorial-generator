@@ -35,10 +35,10 @@ namespace DotNetTutorialGenerator.Infrastructure.Roslyn
             return abstractions;
         }
 
-        public async Task<Abstraction?> AnalyzeClassAsync(string filePath)
+        public async Task<Abstraction> AnalyzeClassAsync(string filePath)
         {
             if (!File.Exists(filePath))
-                return null;
+                return new Abstraction();
 
             try
             {
@@ -83,7 +83,7 @@ namespace DotNetTutorialGenerator.Infrastructure.Roslyn
             }
             catch (Exception)
             {
-                return null;
+                return new Abstraction();
             }
         }
 

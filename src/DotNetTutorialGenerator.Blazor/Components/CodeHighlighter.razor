@@ -1,0 +1,22 @@
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+<pre><code class="@LanguageClass">@Code</code></pre>
+
+@code {
+    [Parameter]
+    public string? Code { get; set; }
+
+    [Parameter]
+    public string Language { get; set; } = "csharp";
+
+    private string LanguageClass => $"language-{Language}";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !string.IsNullOrEmpty(Code))
+        {
+            // Initialize Prism.js
+            await JS.InvokeVoidAsync("highlightCode");
+        }
+    }
+}

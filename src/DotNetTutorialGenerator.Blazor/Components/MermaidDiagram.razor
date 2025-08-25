@@ -1,0 +1,26 @@
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+<div id="@DiagramId" class="mermaid-diagram">
+    @((MarkupString)RenderedDiagram)
+</div>
+
+@code {
+    [Parameter]
+    public string? Definition { get; set; }
+
+    [Parameter]
+    public string? DiagramId { get; set; } = $"mermaid-{Guid.NewGuid():N}";
+
+    private string RenderedDiagram => string.IsNullOrEmpty(Definition) ? 
+        "<p>No diagram definition provided</p>" : 
+        $"<div class=\"mermaid\">{Definition}</div>";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !string.IsNullOrEmpty(Definition))
+        {
+            // Initialize Mermaid.js
+            await JS.InvokeVoidAsync("initializeMermaid", DiagramId);
+        }
+    }
+}

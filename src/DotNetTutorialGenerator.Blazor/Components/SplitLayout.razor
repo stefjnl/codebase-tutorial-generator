@@ -1,0 +1,42 @@
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+<div class="split-layout">
+    <div class="split-pane-left" style="width: @LeftPaneWidth%">
+        @LeftPane
+    </div>
+    <div class="splitter" @onmousedown="StartResize"></div>
+    <div class="split-pane-right" style="width: @(100 - LeftPaneWidth)%">
+        @RightPane
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? LeftPane { get; set; }
+
+    [Parameter]
+    public RenderFragment? RightPane { get; set; }
+
+    private int LeftPaneWidth { get; set; } = 50;
+    private bool isResizing = false;
+
+    private void StartResize(MouseEventArgs e)
+    {
+        isResizing = true;
+        // In a real implementation, this would handle the resizing logic
+    }
+
+    private void StopResize(MouseEventArgs e)
+    {
+        isResizing = false;
+    }
+
+    private void Resize(MouseEventArgs e)
+    {
+        if (isResizing)
+        {
+            // In a real implementation, this would handle the resizing logic
+        }
+    }
+}

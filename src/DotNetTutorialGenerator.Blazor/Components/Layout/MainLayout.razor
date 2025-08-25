@@ -1,0 +1,60 @@
+@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using DotNetTutorialGenerator.Blazor.Services
+@inject IAppState AppState
+@namespace DotNetTutorialGenerator.Blazor.Components.Layout
+
+<div class="app-container">
+    <nav class="sidebar">
+        <NavMenu />
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div class="header-content">
+                <h1>.NET Tutorial Generator</h1>
+                <div class="header-actions">
+                    <a href="https://github.com/stefjnl/codebase-tutorial-generator" target="_blank"
+                        class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-github"></i> Repository
+                    </a>
+                    <a href="settings" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-gear"></i> Settings
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-container">
+            <!-- Global Error Boundary -->
+            <ErrorBoundary>
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent Context="exception">
+                    <div class="alert alert-danger m-3" role="alert">
+                        <h4 class="alert-heading">An error has occurred</h4>
+                        <p>@exception.Message</p>
+                        <button type="button" class="btn btn-primary"
+                            @onclick="() => AppState.ClearNotification()">Clear</button>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
+        </div>
+    </main>
+</div>
+
+<!-- Notification Toast -->
+<BlazoredToast />
+
+<div id="blazor-error-ui">
+    <environment include="Staging,Production">
+        An error has occurred. This application may no longer respond until reloaded.
+    </environment>
+    <environment include="Development">
+        An unhandled exception has occurred. See browser dev tools for details.
+    </environment>
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
