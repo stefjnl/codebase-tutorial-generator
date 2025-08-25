@@ -59,6 +59,17 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IRepositoryCrawler, LocalRepositoryCrawler>();
 builder.Services.AddScoped<IRoslynAnalyzer, RoslynAnalyzer>();
 builder.Services.AddScoped<ITutorialGenerator, TutorialFileWriter>();
+builder.Services.AddScoped<ITutorialOrchestrator, TutorialOrchestrator>();
+
+// Configure HttpClient with base URL
+builder.Services.AddHttpClient("Api", client =>
+{
+    var apiUrl = builder.Configuration["ApiBaseUrl"] ?? "http://localhost:8081";
+    client.BaseAddress = new Uri(apiUrl);
+});
+
+// Also register named HttpClient for direct injection
+builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<GitHubApiClient>();
 
 // Add LLM service with configuration
@@ -68,11 +79,13 @@ builder.Services.AddScoped<ILLMService>(serviceProvider =>
     var llmSettings = config.GetSection("LLMSettings");
     var provider = llmSettings.GetValue<string>("Provider") ?? "openai";
     var apiKey = llmSettings.GetValue<string>("ApiKey") ?? "";
+    var baseUrl = llmSettings.GetValue<string>("BaseUrl") ?? "http://localhost:1234/v1";
 
     return provider.ToLowerInvariant() switch
     {
         "openai" => new OpenAIService(apiKey),
         "claude" => new ClaudeService(apiKey),
+        "lmstudio" => new LMStudioService(baseUrl),
         _ => new OpenAIService(apiKey)
     };
 });

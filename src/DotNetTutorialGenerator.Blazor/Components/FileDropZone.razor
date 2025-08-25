@@ -47,18 +47,26 @@
 
     private async Task OnDrop(DragEventArgs e)
     {
-        // In Blazor, we can't directly call PreventDefault on DragEventArgs
-        // This will be handled by the JavaScript interop
         // In a real implementation, this would handle dropped files
-        // For now, we'll just show a notification
-        AppState.SetNotification("Files dropped successfully", NotificationType.Success);
+        AppState.SetNotification("Files dropped successfully. In a full implementation, these files would be processed.", NotificationType.Success);
+        
+        // For demo purposes, we'll mark the source as valid
+        if (OnFilesSelected.HasDelegate)
+        {
+            await OnFilesSelected.InvokeAsync(new[] { "sample-file.cs" });
+        }
     }
 
     private async Task OnFileSelected(ChangeEventArgs e)
     {
-        // In a real implementation, this would handle selected files
-        // For now, we'll just show a notification
-        AppState.SetNotification("Files selected successfully", NotificationType.Success);
+        // Simulate file selection
+        selectedFiles.Clear();
+        
+        // In a real implementation, this would process the actual files
+        // For now, we'll just add a sample file
+        selectedFiles.Add(new FileInfo { Name = "SampleProject.zip", Size = "1.2 MB" });
+        
+        AppState.SetNotification("Files selected successfully. In a full implementation, these files would be processed.", NotificationType.Success);
 
         if (OnFilesSelected.HasDelegate)
         {
